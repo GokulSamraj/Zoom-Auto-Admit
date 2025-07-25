@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Zoom Auto Admit",
+  "version": "1.0",
+  "description": "Automatically clicks the Admit button in Zoom meetings.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": ["https://*.zoom.us/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.zoom.us/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
