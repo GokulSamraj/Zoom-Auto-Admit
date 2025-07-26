@@ -1,4 +1,5 @@
 let isAdmitting = false;
+let admitInterval = null;
 
 function clickAdmitButtons() {
     const elements = document.querySelectorAll('button, [role="button"], [aria-label*="admit" i], [class*="admit" i]');
@@ -21,18 +22,26 @@ function clickAdmitButtons() {
 }
 
 // Listen for messages from the extension
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
     if (message === 'START_ADMITTING') {
         isAdmitting = true;
-        // Start the interval
-        const intervalId = setInterval(() => {
+        if (admitInterval) {
+            clearInterval(admitInterval);
+        }
+        // Start the interval with 10-second delay
+        admitInterval = setInterval(() => {
             if (!isAdmitting) {
-                clearInterval(intervalId);
+                clearInterval(admitInterval);
+                admitInterval = null;
                 return;
             }
             clickAdmitButtons();
         }, 10000); // Check every 10 seconds
     } else if (message === 'STOP_ADMITTING') {
         isAdmitting = false;
+        if (admitInterval) {
+            clearInterval(admitInterval);
+            admitInterval = null;
+        }
     }
 });
